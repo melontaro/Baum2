@@ -72,6 +72,9 @@
     <Compile Include="Assets\Baum2\Editor\Scripts\BaumPreprocessTexture.cs" />
     <Compile Include="Assets\Baum2\Libraries\OnionRing\Editor\OnionRing.cs" />
     <Compile Include="Assets\Baum2\Sample\Editor\Postprocessor.cs" />
+    <Compile Include="Assets\SuperScrollView\Editor\LoopGridViewEditor.cs" />
+    <Compile Include="Assets\SuperScrollView\Editor\LoopListViewEditor2.cs" />
+    <Compile Include="Assets\SuperScrollView\Editor\LoopStaggeredGridViewEditor.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

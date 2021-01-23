@@ -464,15 +464,34 @@ namespace Baum2.Editor
         public override GameObject Render(Renderer renderer)
         {
             var go = CreateSelf(renderer);
+
+            var scrollView = new GameObject("ScrollView");
+            scrollView.AddComponent<RectTransform>();
+            scrollView.transform.SetParent(go.transform);
+
+            var scrollViewBg = new GameObject("ScrollViewBg");
+            scrollViewBg.AddComponent<RectTransform>();
+            scrollViewBg.transform.SetParent(scrollView.transform);
+
+            var Viewport = new GameObject("Viewport");
+            Viewport.AddComponent<RectTransform>();
+            Viewport.transform.SetParent(scrollView.transform);
+
+
+
             var content = new GameObject("Content");
             content.AddComponent<RectTransform>();
-            content.transform.SetParent(go.transform);
+            content.transform.SetParent(Viewport.transform);
+
+            var itemPrefab = new GameObject("ItemPrefab");
+            itemPrefab.AddComponent<RectTransform>();
+            itemPrefab.transform.SetParent(content.transform);
 
             //SetupScroll(go, content);
-            SetMaskImage(renderer, go, content);
+            // SetMaskImage(renderer, go, content);
 
-            var items = CreateItems(renderer, go);
-            SetupList(go, items, content);
+            //var items = CreateItems(renderer, go);
+            //SetupList(go, items, content);
 
             SetStretch(go, renderer);
             SetPivot(go, renderer);
