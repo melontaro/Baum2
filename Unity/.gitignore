@@ -1,0 +1,12 @@
+/Library
+/Temp
+/.vs/BDFramwork/v14
+/.idea
+/.vs
+/obj
+/UnityPackageManager
+/Logs
+/.gradle
+/Assets/Plugins/Editor/JetBrains
+/Assets/Plugins/Editor/JetBrains.meta
+/Assets/Plugins/Sirenix
