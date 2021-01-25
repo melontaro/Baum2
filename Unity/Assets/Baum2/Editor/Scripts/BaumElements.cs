@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 using TMPro;
+using SuperScrollView;
 
 namespace Baum2.Editor
 {
@@ -464,29 +465,74 @@ namespace Baum2.Editor
         public override GameObject Render(Renderer renderer)
         {
             var go = CreateSelf(renderer);
+            go.AddComponent<CanvasRenderer>();
 
             var scrollView = new GameObject("ScrollView");
             scrollView.AddComponent<RectTransform>();
             scrollView.transform.SetParent(go.transform);
+            ScrollRect scrollRect = scrollView.AddComponent<ScrollRect>();
+            scrollView.AddComponent<CanvasRenderer>();
+            LoopListView2 loopListView2 = scrollView.AddComponent<LoopListView2>();
 
             var scrollViewBg = new GameObject("ScrollViewBg");
-            scrollViewBg.AddComponent<RectTransform>();
+            RectTransform scrollViewBgRT = scrollViewBg.AddComponent<RectTransform>();
+            scrollViewBgRT.anchorMin = new Vector2(0, 0);
+            scrollViewBgRT.anchorMax = new Vector2(1, 1);
+            scrollViewBgRT.pivot = new Vector2(.5f, .5f);
+            scrollViewBg.AddComponent<CanvasRenderer>();
+            Image imgBg = scrollViewBg.AddComponent<Image>();
+            imgBg.raycastTarget = true;
+            imgBg.maskable = true;
+            imgBg.type = Image.Type.Simple;
+            imgBg.useSpriteMesh = false;
+            imgBg.preserveAspect = false;
+
             scrollViewBg.transform.SetParent(scrollView.transform);
 
             var Viewport = new GameObject("Viewport");
-            Viewport.AddComponent<RectTransform>();
+            RectTransform viewportRT = Viewport.AddComponent<RectTransform>();
+            viewportRT.anchorMin = new Vector2(0, 0);
+            viewportRT.anchorMax = new Vector2(1, 1);
+            viewportRT.pivot = new Vector2(0, 0);
             Viewport.transform.SetParent(scrollView.transform);
+            Viewport.AddComponent<Mask>().showMaskGraphic = false;
+            Viewport.AddComponent<CanvasRenderer>();
+            Image image = Viewport.AddComponent<Image>();
+            image.type = Image.Type.Sliced;
+            image.fillCenter = true;
+            image.pixelsPerUnitMultiplier = 1;
+            image.raycastTarget = true;
+            image.maskable = true;
 
 
 
             var content = new GameObject("Content");
-            content.AddComponent<RectTransform>();
+            RectTransform contentRT = content.AddComponent<RectTransform>();
+
+            contentRT.anchorMin = new Vector2(0, 1);
+            contentRT.anchorMax = new Vector2(1, 1);
+            contentRT.pivot = new Vector2(0, 1);
+
             content.transform.SetParent(Viewport.transform);
 
-            var itemPrefab = new GameObject("ItemPrefab");
-            itemPrefab.AddComponent<RectTransform>();
-            itemPrefab.transform.SetParent(content.transform);
+            scrollRect.content = content.GetComponent<RectTransform>();
+            scrollRect.viewport = Viewport.GetComponent<RectTransform>();
 
+            var itemPrefab = new GameObject("ItemPrefab");
+            RectTransform rectTransform = itemPrefab.AddComponent<RectTransform>();
+            rectTransform.anchorMin = new Vector2(.5f, 1);
+            rectTransform.anchorMax = new Vector2(.5f, 1);
+            rectTransform.pivot = new Vector2(0.5f, 1f);
+            itemPrefab.transform.SetParent(content.transform);
+            itemPrefab.AddComponent<ListItem2>();
+
+            ItemPrefabConfData itemPrefabConfData = new ItemPrefabConfData();
+            itemPrefabConfData.mItemPrefab = itemPrefab;
+            itemPrefabConfData.mInitCreateCount = 5;
+            itemPrefabConfData.mPadding = 10;
+
+            loopListView2.ItemPrefabDataList.Add(itemPrefabConfData);
+            loopListView2.ArrangeType = ListItemArrangeType.TopToBottom;
             //SetupScroll(go, content);
             // SetMaskImage(renderer, go, content);
 
@@ -498,13 +544,6 @@ namespace Baum2.Editor
             return go;
         }
 
-        private void SetupScroll(GameObject go, GameObject content)
-        {
-            var scrollRect = go.AddComponent<ScrollRect>();
-            scrollRect.content = content.GetComponent<RectTransform>();
-
-
-        }
 
         private void SetMaskImage(Renderer renderer, GameObject go, GameObject content)
         {
